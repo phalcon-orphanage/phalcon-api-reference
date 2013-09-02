@@ -1,15 +1,15 @@
 <?php
 // some php code to keep template clean
-$urls        = [];
-$tabsClasses = [];
-foreach(['classes', 'namespaces', 'interfaces', 'changelog'] as $type)
+$urls        = array();
+$tabsClasses = array();
+foreach(array('classes', 'namespaces', 'interfaces', 'changelog') as $type)
 {
-	$urls[$type] = $this->url->get([
+	$urls[$type] = $this->url->get(array(
 		'for'      => 'showSummary',
 		'type'     => $type,
 		'language' => $language,
 		'version'  => $version,
-	]);
+	));
 	$tabsClasses[$type] = (isset($summary) && $summary == $type ? 'active' : '');
 }
 ?>
