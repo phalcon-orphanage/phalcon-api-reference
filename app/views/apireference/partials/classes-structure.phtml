@@ -18,7 +18,7 @@ $printList = function($x, $ns, $selected) use(&$printList, $tree)
 		echo "<li class=\"$class\">" , $x->tag->linkToApi(array($namespace, $name));
 		if(isset($tree->structure[$namespace]))
 		{
-			$printList($namespace, $selected);
+			$printList($x, $namespace, $selected);
 		}
 		echo '</li>';
 	}
