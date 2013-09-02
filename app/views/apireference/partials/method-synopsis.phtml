@@ -37,8 +37,8 @@ if($useLink)
 else
 	$synopsis .= " <strong class=\"src-name\">$method->name</strong> (";
 
-$args = [];
-foreach($method->getArguments(['order'=>'ordering']) as $arg)
+$args = array();
+foreach($method->getArguments(array('order'=>'ordering')) as $arg)
 {
 	$argDef = '';
 	if($arg->type)

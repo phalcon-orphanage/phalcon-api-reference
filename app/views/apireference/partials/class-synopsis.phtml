@@ -37,7 +37,7 @@
 			<div>
 				<span class="src-comment">/* Properties */</span>
 				<?php foreach($class->properties as $property) {
-					$this->partial('property-synopsis', ['property'=>$property, 'useLink'=>true]);
+					$this->partial('property-synopsis', array('property'=>$property, 'useLink'=>true));
 				} ?>
 			</div>
 		</div>
@@ -48,7 +48,7 @@
 			<div>
 				<span class="src-comment">/* Methods */</span>
 				<?php foreach($class->methods as $method) {
-					$this->partial('method-synopsis', ['method'=>$method, 'useLink'=>true]);
+					$this->partial('method-synopsis', array('method'=>$method, 'useLink'=>true));
 				} ?>
 			</div>
 		</div>

@@ -58,21 +58,21 @@
 <?php if($class->docs) {
 	?>
 	<div class="description section">
-		<?=$this->filter->sanitize($class->docs, ['docs', 'apiLinks'])?>
+		<?= $this->filter->sanitize($class->docs, array('docs', 'apiLinks')) ?>
 	</div>
 <?php } ?>
 
 
 <?php if($class->example) { ?>
 	<div class="example section">
-		<?=$this->tag->code($class->example)?>
+		<?= $this->tag->code($class->example) ?>
 	</div>
 <?php } ?>
 
 
 <div class="details">
 	<code class="synopsis" style="display: none">
-		<?=$this->partial('class-synopsis', ['class'=>$class])?>
+		<?= $this->partial('class-synopsis', array('class'=>$class)) ?>
 	</code>
 	<span class="button green show-synopsis">Show class synopsis</span>
 </div>
@@ -95,7 +95,7 @@
 						<span class="src-name"><?=$constant->name?></span>
 					</td>
 					<td class="align-center"><?=$constant->value?></td>
-					<td><?=$this->filter->sanitize($constant->docs, ['docs', 'apiLinks'])?></td>
+					<td><?=$this->filter->sanitize($constant->docs, array('docs', 'apiLinks')) ?></td>
 				</tr>
 			<?php } ?>
 			</tbody>
@@ -136,7 +136,7 @@
 						<a href="<?=$href?>">$<?=$property->name?></a>
 					</td>
 					<td>
-						<?=$this->filter->sanitize($property->docs, ['docs', 'apiLinks'])?>
+						<?=$this->filter->sanitize($property->docs, array('docs', 'apiLinks')) ?>
 					</td>
 				</tr>
 			<?php } ?>
@@ -183,7 +183,7 @@
 					<a href="<?=$href?>"><?=$method->name?>&nbsp;(&nbsp;)</a>
 				</td>
 				<td>
-					<?=$this->filter->sanitize($method->docs, ['docs', 'apiLinks'])?>
+					<?= $this->filter->sanitize($method->docs, array('docs', 'apiLinks')) ?>
 				</td>
 			</tr>
 		<?php } ?>
@@ -197,7 +197,7 @@
 		<h2>Properties details <a class="anchor" href="#properties-details">¶</a></h2>
 		<?php foreach($class->properties as $property) {
 			if($property->defined_by != $name) continue;
-			$this->partial('property-details', ['property'=>$property, 'useLink'=>false]);
+			$this->partial('property-details', array('property' => $property, 'useLink' => false));
 		} ?>
 	</div>
 <?php } ?>
@@ -208,7 +208,7 @@
 		<h2>Methods details <a class="anchor" href="#methods-details">¶</a></h2>
 		<?php foreach($class->methods as $method) {
 			if($method->defined_by != $name) continue;
-			$this->partial('method-details', ['method'=>$method, 'useLink'=>false]);
+			$this->partial('method-details', array('method' => $method, 'useLink' => false));
 		} ?>
 	</div>
 <?php } ?>

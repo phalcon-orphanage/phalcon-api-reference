@@ -20,10 +20,10 @@ $(function()
 });
 </script>
 
-<?=$this->tag->select([
+<?=$this->tag->select(array(
 	'version',
 	$allVersions,
-	'using' => ['version', 'version'],
+	'using' => array('version', 'version'),
 	'value' => $version,
 	'id'    => 'version-select',
-]);?>
+)); ?>

@@ -14,7 +14,7 @@ $printList = function($ns, $selected) use(&$printList, $tree)
 	{
 		$namespace = $tree->structure[$ns]->name.'\\'.$name;
 		$class     = $selected == $namespace ? 'cl-selected' : '';
-		echo "<li class=\"$class\">" , $this->tag->linkToApi([$namespace, $name]);
+		echo "<li class=\"$class\">" , $this->tag->linkToApi(array($namespace, $name));
 		if(isset($tree->structure[$namespace]))
 		{
 			$printList($namespace, $selected);

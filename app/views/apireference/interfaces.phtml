@@ -3,12 +3,12 @@
 	foreach($tree->list as $interface => $type)
 	{
 		if($type != 'interface') continue;
-		$this->view->partial('classes-list-item', [
+		$this->view->partial('classes-list-item', array(
 			'class'          => $interface,
 			'implementation' => false,
 			'inheritance'    => true,
 			'children'       => false
-		]);
+		));
 	}
 	?>
 </ul>

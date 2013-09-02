@@ -1,7 +1,7 @@
 <div id="$<?=$property->name?>-details">
 
 	<?php if($property->line) { ?>
-		<?=$this->tag->linkToGit([$class->file, 'source', 'class'=>'git-line'], $version, $property->line)?>
+		<?=$this->tag->linkToGit(array($class->file, 'source', 'class'=>'git-line'), $version, $property->line)?>
 	<?php } ?>
 
 	<h3>
@@ -10,12 +10,12 @@
 	</h3>
 
 	<code class="synopsis">
-		<?=$this->partial('property-synopsis', ['property'=>$property])?>
+		<?=$this->partial('property-synopsis', array('property'=>$property)) ?>
 	</code>
 
 	<?php if($property->docs) { ?>
 		<div class="description">
-			<?=$this->filter->sanitize($property->docs, ['docs', 'apiLinks'])?>
+			<?=$this->filter->sanitize($property->docs, array('docs', 'apiLinks')) ?>
 		</div>
 	<?php } ?>
 

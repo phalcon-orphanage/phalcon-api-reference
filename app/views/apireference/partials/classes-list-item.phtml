@@ -14,7 +14,7 @@ if($inheritance && isset($tree->inheritance[$class]))
 if($implementation && isset($tree->implementation[$class]))
 {
 	echo ' <span>implements ';
-	$interfaces = [];
+	$interfaces = array();
 	foreach($tree->implementation[$class] as $interface)
 	{
 		$interfaces[] = stripos($interface, 'phalcon')===0
@@ -26,11 +26,11 @@ if($implementation && isset($tree->implementation[$class]))
 
 if($children)
 {
-	$this->view->partial('classes-list-children', [
+	$this->view->partial('classes-list-children', array(
 		'parent'         => $class,
 		'inheritance'    => $inheritance,
 		'implementation' => $implementation,
-	]);
+	));
 }
 
 echo '</li>';

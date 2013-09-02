@@ -7,12 +7,12 @@
 	<h3>Namespaces summary</h3>
 	<ul>
 		<?php foreach($namespace->namespaces as $ns) {
-			$this->view->partial('classes-list-item', [
+			$this->view->partial('classes-list-item', array(
 				'class'          => "$namespace->name\\$ns",
 				'implementation' => false,
 				'inheritance'    => false,
 				'children'       => false
-			]);
+			));
 		} ?>
 	</ul>
 </div>
@@ -23,12 +23,12 @@
 	<h3>Classes summary</h3>
 	<ul>
 		<?php foreach($namespace->classes as $class) {
-			$this->view->partial('classes-list-item', [
+			$this->view->partial('classes-list-item', array(
 				'class'          => "$namespace->name\\$class",
 				'implementation' => true,
 				'inheritance'    => true,
 				'children'       => false
-			]);
+			));
 		} ?>
 	</ul>
 </div>
@@ -39,12 +39,12 @@
 	<h3>Interfaces summary</h3>
 	<ul>
 		<?php foreach($namespace->interfaces as $interface) {
-			$this->view->partial('classes-list-item', [
+			$this->view->partial('classes-list-item', array(
 				'class'          => "$namespace->name\\$interface",
 				'implementation' => true,
 				'inheritance'    => true,
 				'children'       => false
-			]);
+			));
 		} ?>
 	</ul>
 </div>

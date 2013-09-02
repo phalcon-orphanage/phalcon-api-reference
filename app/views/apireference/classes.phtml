@@ -8,12 +8,12 @@
 	foreach($tree->list as $class => $type)
 	{
 		if($type != 'class' || (isset($tree->inheritance[$class]) && substr($tree->inheritance[$class], 0, 8) == 'Phalcon\\')) continue;
-		$this->view->partial('classes-list-item', [
+		$this->view->partial('classes-list-item', array(
 			'class'          => $class,
 			'implementation' => true,
 			'inheritance'    => false,
 			'children'       => true
-		]);
+		));
 	}
 	?>
 </ul>
@@ -23,12 +23,12 @@
 	foreach($tree->list as $class => $type)
 	{
 		if($type != 'class') continue;
-		$this->view->partial('classes-list-item', [
+		$this->view->partial('classes-list-item', array(
 			'class'          => $class,
 			'implementation' => true,
 			'inheritance'    => true,
 			'children'       => false
-		]);
+		));
 	}
 	?>
 </ul>
