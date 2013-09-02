@@ -16,29 +16,29 @@ class Translations extends Model
 
 	public function initialize()
 	{
-		$this->belongsTo('version', __NAMESPACE__.'\Versions', 'version', [
+		$this->belongsTo('version', __NAMESPACE__.'\Versions', 'version', array(
 			'alias'      => 'versionObj',
 			'foreignKey' => true,
-		]);
-		$this->belongsTo('class_id', __NAMESPACE__.'\Classes', 'id', [
+		));
+		$this->belongsTo('class_id', __NAMESPACE__.'\Classes', 'id', array(
 			'alias'      => 'classObj',
 			'foreignKey' => true,
-		]);
-		$this->belongsTo('constant_id', __NAMESPACE__.'\Constants', 'id', [
+		));
+		$this->belongsTo('constant_id', __NAMESPACE__.'\Constants', 'id', array(
 			'alias'      => 'constantObj',
 			'foreignKey' => true,
-		]);
-		$this->belongsTo('property_id', __NAMESPACE__.'\Properties', 'id', [
+		));
+		$this->belongsTo('property_id', __NAMESPACE__.'\Properties', 'id', array(
 			'alias'      => 'propertyObj',
 			'foreignKey' => true,
-		]);
-		$this->belongsTo('method_id', __NAMESPACE__.'\Methods', 'id', [
+		));
+		$this->belongsTo('method_id', __NAMESPACE__.'\Methods', 'id', array(
 			'alias'      => 'methodObj',
 			'foreignKey' => true,
-		]);
-		$this->belongsTo('argument_id', __NAMESPACE__.'\Arguments', 'id', [
+		));
+		$this->belongsTo('argument_id', __NAMESPACE__.'\Arguments', 'id', array(
 			'alias'      => 'argumentObj',
 			'foreignKey' => true,
-		]);
+		));
 	}
 }

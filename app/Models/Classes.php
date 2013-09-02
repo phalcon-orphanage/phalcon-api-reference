@@ -31,24 +31,24 @@ class Classes extends Model
 
 	public function initialize()
 	{
-		$this->belongsTo('version', __NAMESPACE__.'\Versions', 'version', [
+		$this->belongsTo('version', __NAMESPACE__.'\Versions', 'version', array(
 			'alias'      => 'versionObj',
 			'foreignKey' => true,
-		]);
-		$this->hasMany('id', __NAMESPACE__.'\Constants', 'class_id', [
+		));
+		$this->hasMany('id', __NAMESPACE__.'\Constants', 'class_id', array(
 			'alias'      => 'constants',
-			'foreignKey' => ['action' => Relation::ACTION_CASCADE]
-		]);
-		$this->hasMany('id', __NAMESPACE__.'\Properties', 'class_id', [
+			'foreignKey' => array('action' => Relation::ACTION_CASCADE)
+		));
+		$this->hasMany('id', __NAMESPACE__.'\Properties', 'class_id', array(
 			'alias'      => 'properties',
-			'foreignKey' => ['action' => Relation::ACTION_CASCADE]
-		]);
-		$this->hasMany('id', __NAMESPACE__.'\Methods', 'class_id', [
+			'foreignKey' => array('action' => Relation::ACTION_CASCADE)
+		));
+		$this->hasMany('id', __NAMESPACE__.'\Methods', 'class_id', array(
 			'alias'      => 'methods',
 			'conditions' => 'valid >= :dttm:',
-			'bind'       => ['dttm', date('Y-m-d H:i:s')],
+			'bind'       => array('dttm', date('Y-m-d H:i:s')),
 			'order'      => 'name DESC',
-			'foreignKey' => ['action' => Relation::ACTION_CASCADE]
-		]);
+			'foreignKey' => array('action' => Relation::ACTION_CASCADE)
+		));
 	}
 }

@@ -35,7 +35,7 @@ class Model extends \Phalcon\Mvc\Model
 			{
 				if(is_string($rules))
 				{
-					$rules = [$rules => []];
+					$rules = array($rules => array(]];
 				}
 
 				foreach($rules as $validator => $params)
@@ -43,13 +43,13 @@ class Model extends \Phalcon\Mvc\Model
 					if(is_numeric($validator))
 					{
 						$validator = $params;
-						$params    = [];
+						$params    = array(];
 					}
 					if(substr($validator, 0, 3) === 'Ph\\')
 					{
 						$validator = '\Phalcon\Mvc\Model\Validator' . substr($validator, 2);
 					}
-					$params['field'] = $field;
+					$paramsarray('field'] = $field;
 					$this->validate(new $validator($params));
 				}
 			}
@@ -68,7 +68,7 @@ class Model extends \Phalcon\Mvc\Model
 
 		foreach(array_diff($numeric, $pk) as $attr)
 		{
-			if(is_bool($this->$attr) && isset($notNull[$attr]))
+			if(is_bool($this->$attr) && isset($notNullarray($attr]))
 			{
 				$this->$attr = (int)$this->$attr;
 			}

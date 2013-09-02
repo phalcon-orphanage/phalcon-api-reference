@@ -17,9 +17,9 @@ class Constants extends Model
 
 	public function initialize()
 	{
-		$this->belongsTo('class_id',  __NAMESPACE__.'\Classes', 'id', [
+		$this->belongsTo('class_id',  __NAMESPACE__.'\Classes', 'id', array(
 			'alias'      => 'class',
-			'foreignKey' => ['action' => Relation::ACTION_CASCADE],
+			'foreignKey' => array('action' => Relation::ACTION_CASCADE],
 		]);
 	}
 }

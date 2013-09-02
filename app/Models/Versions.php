@@ -19,10 +19,10 @@ class Versions extends Model
 
 	public function initialize()
 	{
-		$this->hasMany('version', __NAMESPACE__.'\Classes', 'version', [
+		$this->hasMany('version', __NAMESPACE__.'\Classes', 'version', array(
 			'alias'      => 'classes',
-			'foreignKey' => ['action' => Relation::ACTION_CASCADE,]
-		]);
+			'foreignKey' => array('action' => Relation::ACTION_CASCADE)
+		));
 	}
 
 

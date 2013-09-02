@@ -16,9 +16,9 @@ class Arguments extends Model
 
 	public function initialize()
 	{
-		$this->belongsTo('method_id',  __NAMESPACE__.'\Methods', 'id', [
+		$this->belongsTo('method_id',  __NAMESPACE__.'\Methods', 'id', array(
 			'alias'      => 'method',
 			'foreignKey' => true
-		]);
+		));
 	}
 }

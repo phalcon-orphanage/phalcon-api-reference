@@ -22,24 +22,24 @@ class Properties extends Model
 	const VISIBILITY_PROTECTED = 'protected';
 	const VISIBILITY_PRIVATE   = 'private';
 
-	protected $_validation = [
-		'visibility' => [
-			'Ph\InclusionIn' => [
-				'domain' => [
+	protected $_validation = array(
+		'visibility' => array(
+			'Ph\InclusionIn' => array(
+				'domain' => array(
 					self::VISIBILITY_PUBLIC,
 					self::VISIBILITY_PROTECTED,
 					self::VISIBILITY_PRIVATE,
-				],
-			],
-		],
-	];
+				),
+			),
+		),
+	);
 
 	public function initialize()
 	{
-		$this->belongsTo('class_id',  __NAMESPACE__.'\Classes', 'id', [
+		$this->belongsTo('class_id',  __NAMESPACE__.'\Classes', 'id', array(
 			'alias'      => 'class',
 			'foreignKey' => true,
-		]);
+		));
 	}
 
 
