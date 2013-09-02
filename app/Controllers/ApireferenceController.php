@@ -6,6 +6,10 @@ use ApiDocs\Models;
 use ApiDocs\Filters\AddApiLinksFilter;
 use ApiDocs\Filters\PrepareDocsFilter;
 
+if (!defined('SORT_FLAG_CASE')) {
+	define('SORT_FLAG_CASE', SORT_NATURAL);
+}
+
 class ApiReferenceController extends Controller
 {
 	protected $version;
