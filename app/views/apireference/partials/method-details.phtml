@@ -1,6 +1,6 @@
 <div id="<?=$method->name?>-details">
 	<?php if($method->line) { ?>
-		<?=$this->tag->linkToGit([$class->file, 'source', 'class'=>'git-line'], $version, $method->line)?>
+		<?=$this->tag->linkToGit(array($class->file, 'source', 'class'=>'git-line'), $version, $method->line)?>
 	<?php } ?>
 
 	<h3>
