@@ -7,7 +7,7 @@ use ApiDocs\Filters\AddApiLinksFilter;
 use ApiDocs\Filters\PrepareDocsFilter;
 
 if (!defined('SORT_FLAG_CASE')) {
-	define('SORT_FLAG_CASE', SORT_NATURAL);
+	define('SORT_FLAG_CASE', 0);
 }
 
 class ApiReferenceController extends Controller
@@ -31,8 +31,7 @@ class ApiReferenceController extends Controller
 			$lang = strtolower(substr($this->request->getBestLanguage(), 0, 2));
 			$lang = $lang && $this->_hasLanguage($lang) ? $lang : $this->config->defaultLang;
 			$this->dispatcher->setParam('language', $lang);
-		}
-		elseif($this->dispatcher->getParam('language') != $this->config->defaultLang && !$this->_hasLanguage())
+		} elseif($this->dispatcher->getParam('language') != $this->config->defaultLang && !$this->_hasLanguage())
 		{
 			$this->forward404();
 			return false;
@@ -103,8 +102,7 @@ class ApiReferenceController extends Controller
 		}
 
 		$dir = $this->config->cache->dir . substr($cacheKey, 0, strrpos($cacheKey, '/'));
-		if(!is_dir($dir))
-		{
+		if (!is_dir($dir)) {
 			mkdir($dir, 0755, true);
 		}
 	}

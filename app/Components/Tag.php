@@ -37,7 +37,7 @@ class Tag extends \Phalcon\Tag
 	public static function linkToGit($params, $version=null, $line=null)
 	{
 		if(is_string($params))
-			$params = [$params];
+			$params = array($params);
 
 		if(empty($params[1]))
 			$params[1] = $params[0];
