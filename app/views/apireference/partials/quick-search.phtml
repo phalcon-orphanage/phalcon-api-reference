@@ -7,7 +7,7 @@ $(function()
 {
 	$('#quick-search INPUT')
 		.select2({
-			data                 : <?=json_encode(array_map(function($item){return ['id'=>str_replace('\\', '/', $item), 'text'=>$item];}, array_keys($tree->list)))?>,
+			data                 : <?=json_encode(array_map(function($item){return array('id'=>str_replace('\\', '/', $item), 'text'=>$item);}, array_keys($tree->list)))?>,
 			placeholder          : 'Quick search',
 			dropdownAutoWidth    : true
 		})
