@@ -120,7 +120,7 @@
 			<?php foreach($class->properties as $property) {
 				$href = "#\${$property->name}-details";
 				if($property->defined_by != $name)
-					$href = $this->url->getApiUrl($property->defined_by) . $href;
+					$href = null;
 				$pointTitle   = $property->visibility . ($property->is_static?' static':'');
 			?>
 				<tr class="<?=($property->defined_by!=$name?'inherited':'')?>">
@@ -133,7 +133,11 @@
 						</span>
 					</td>
 					<td>
+                        <?php if( $href ) { ?>
 						<a href="<?=$href?>">$<?=$property->name?></a>
+                        <?php }else{ ?>
+                        <span>$<?=$property->name?><span>
+                        <?php } ?>
 					</td>
 					<td>
 						<?=$this->filter->sanitize($property->docs, array('docs', 'apiLinks')) ?>
@@ -163,7 +167,7 @@
 		<?php foreach($class->methods as $method) {
 			$href = "#{$method->name}-details";
 			if($method->defined_by != $name)
-				$href = $this->url->getApiUrl($method->defined_by) . $href;
+				$href = null;
 			$pointTitle  = '';
 			$pointTitle .= $method->is_final?'final ':'';
 			$pointTitle .= $method->is_abstract?'abstract ':'';
@@ -180,7 +184,12 @@
 					</span>
 				</td>
 				<td>
-					<a href="<?=$href?>"><?=$method->name?>&nbsp;(&nbsp;)</a>
+                    <?php if( $href ) { ?>
+                        <a href="<?=$href?>"><?=$method->name?>&nbsp;(&nbsp;)</a>
+                    <?php }else{ ?>
+                    <span>$<?=$method->name?>&nbsp;(&nbsp;)<span>
+                    <?php } ?>
+
 				</td>
 				<td>
 					<?= $this->filter->sanitize($method->docs, array('docs', 'apiLinks')) ?>
