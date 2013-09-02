@@ -13,10 +13,10 @@ class Controller extends \Phalcon\Mvc\Controller
 		if(is_string($forward))
 		{
 			$uriParts = explode('/', $forward, 2);
-			$forward  = [
+			$forward  = array(
 				'controller' => $uriParts[0],
 				'action'     => $uriParts[1]
-			];
+			);
 		}
 		$this->view->cache(false);
 		return $this->dispatcher->forward($forward);
