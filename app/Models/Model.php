@@ -49,7 +49,7 @@ class Model extends \Phalcon\Mvc\Model
 					{
 						$validator = '\Phalcon\Mvc\Model\Validator' . substr($validator, 2);
 					}
-					$paramsarray('field') = $field;
+					$paramsarray['field'] = $field;
 					$this->validate(new $validator($params));
 				}
 			}
