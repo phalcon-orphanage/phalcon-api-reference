@@ -1,6 +1,6 @@
 <?php
 
-$printList = function($ns, $selected) use(&$printList, $tree)
+$printList = function($x, $ns, $selected) use(&$printList, $tree)
 {
 	$arr = array_unique(array_merge(
 		$tree->structure[$ns]->namespaces,
@@ -15,7 +15,7 @@ $printList = function($ns, $selected) use(&$printList, $tree)
 	{
 		$namespace = $tree->structure[$ns]->name.'\\'.$name;
 		$class     = $selected == $namespace ? 'cl-selected' : '';
-		echo "<li class=\"$class\">" , Phalcon\Tag::linkToApi(array($namespace, $name));
+		echo "<li class=\"$class\">" , $x->tag->linkToApi(array($namespace, $name));
 		if(isset($tree->structure[$namespace]))
 		{
 			$printList($namespace, $selected);
@@ -29,5 +29,5 @@ $printList = function($ns, $selected) use(&$printList, $tree)
 
 <div id="tree">
 	<?=$this->tag->linkToApi('Phalcon')?>
-	<?php $printList('Phalcon', isset($name) ? $name : null) ?>
+	<?php $printList($this, 'Phalcon', isset($name) ? $name : null) ?>
 </div>
