@@ -16,10 +16,10 @@ class ApiReferenceController extends Controller
 	{
 		if(!$this->dispatcher->getParam('version') || $this->dispatcher->getParam('version') == 'latest')
 		{
-			$this->dispatcher->setParam('version', Models\Versions::maximum([
+			$this->dispatcher->setParam('version', Models\Versions::maximum(array(
 				'column'     => 'version',
 				'conditions' => 'version NOT LIKE("tmp-%")'
-			]));
+			));
 		}
 
 		if(!$this->dispatcher->getParam('language'))
@@ -34,10 +34,10 @@ class ApiReferenceController extends Controller
 			return false;
 		}
 
-		$this->version = Models\Versions::findFirst([
+		$this->version = Models\Versions::findFirst(array(
 			'conditions' => 'version = ?0',
-			'bind'       => [$this->dispatcher->getParam('version')],
-		]);
+			'bind'       => array($this->dispatcher->getParam('version')),
+		));
 
 		if(!$this->version)
 		{
@@ -56,11 +56,11 @@ class ApiReferenceController extends Controller
 
 	public function initialize()
 	{
-		$allVersions = Models\Versions::find([
+		$allVersions = Models\Versions::find(array(
 			'conditions' => 'version NOT LIKE "tmp-%"',
 			'columns'    => 'version',
 			'order'      => 'version DESC'
-		]);
+		));
 
 		$this->filter->add('apiLinks', new AddApiLinksFilter);
 		$this->filter->add('docs',     new PrepareDocsFilter);
@@ -89,9 +89,9 @@ class ApiReferenceController extends Controller
 			? 'summary-' . $this->dispatcher->getParam('summary')
 			: str_replace('\\', '-', $this->dispatcher->getParam('class'));
 
-		$this->view->cache([
+		$this->view->cache(array(
 			'key' => $cacheKey
-		]);
+		));
 
 		if($this->view->getCache()->exists($cacheKey))
 		{
@@ -146,11 +146,11 @@ class ApiReferenceController extends Controller
 		}
 
 		/** @var Models\Classes $class */
-		$class = $this->version->getClasses([
+		$class = $this->version->getClasses(array(
 			'conditions' => 'CONCAT(LCASE(namespace), "\\\\", LCASE(name)) = :class:',
-			'bind'       => ['class' => $this->dispatcher->getParam('class')],
+			'bind'       => array('class' => $this->dispatcher->getParam('class')),
 			'limit'      => 1,
-		])->getFirst();
+		))->getFirst();
 
 		$namespace = $this->_getNamespaceInfo($this->dispatcher->getParam('class'));
 
@@ -171,7 +171,7 @@ class ApiReferenceController extends Controller
 		else
 			$type = 'class';
 
-		$subclasses = $class ? $this->_getSubclasses("$class->namespace\\$class->name") : [];
+		$subclasses = $class ? $this->_getSubclasses("$class->namespace\\$class->name") : array();
 		$name       = $class ? "$class->namespace\\$class->name" : $namespace->name;
 
 		$this->tag->setTitle(ucfirst($type) . ' ' . $name .  ' — Phalcon '.$this->version->version.' API reference');
@@ -201,11 +201,11 @@ class ApiReferenceController extends Controller
 
 	protected function _getStructure(Models\Versions $version)
 	{
-		$tree = (object)[
-			'structure'   => [],
-			'inheritance' => [],
-			'list'        => [],
-		];
+		$tree = (object)(
+			'structure'   => array(),
+			'inheritance' => array(),
+			'list'        => array(),
+		);
 
 		foreach($version->classes as $class)
 		{
@@ -249,9 +249,9 @@ class ApiReferenceController extends Controller
 		ksort($tree->list,      SORT_STRING|SORT_FLAG_CASE);
 		array_walk($tree->structure, function(&$obj)
 		{
-			if(!isset($obj->namespaces)) $obj->namespaces = [];
-			if(!isset($obj->interfaces)) $obj->interfaces = [];
-			if(!isset($obj->classes))    $obj->classes    = [];
+			if(!isset($obj->namespaces)) $obj->namespaces = array();
+			if(!isset($obj->interfaces)) $obj->interfaces = array();
+			if(!isset($obj->classes))    $obj->classes    = array();
 			$obj->namespaces = array_unique($obj->namespaces);
 			sort($obj->namespaces, SORT_STRING|SORT_FLAG_CASE);
 			sort($obj->classes,    SORT_STRING|SORT_FLAG_CASE);
@@ -267,19 +267,19 @@ class ApiReferenceController extends Controller
 		$lang    = $lang    ?: $this->dispatcher->getParam('language');
 		$version = $version ?: $this->dispatcher->getParam('version');
 
-		return (bool)Models\Translations::count([
+		return (bool)Models\Translations::count(array(
 			'conditions' => 'lang=?0 AND version=?1',
-			'bind'       => [$lang, $version],
-		]);
+			'bind'       => array($lang, $version),
+		));
 	}
 
 
 	protected function _hasVersion($version=null)
 	{
 		$version = $version ?: $this->dispatcher->getParam('version');
-		return (bool)Models\Versions::count([
+		return (bool)Models\Versions::count(array(
 			'conditions' => 'version = ?0',
-			'bind'       => [$version],
-		]);
+			'bind'       => array($version),
+		));
 	}
 }
