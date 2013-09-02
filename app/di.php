@@ -27,12 +27,12 @@ $di->setShared('view', function() use($di)
 {
 	$view = new Phalcon\Mvc\View;
 	$view->setViewsDir(APP_ROOT . '/views/');
-	$view->registerEngines([
+	$view->registerEngines(array(
 		'.phtml' => 'Phalcon\Mvc\View\Engine\Php',
 		'.volt'  => function($view , $di) {
 			$config = $di->get('config');
 			$volt = new Phalcon\Mvc\View\Engine\Volt($view , $di);
-			$volt->setOptions((array)$config->voltOptions);
+			$volt->setOptions((array) $config->voltOptions);
 			$volt->getCompiler()->addFunction(
 				'tr',
 				function ($key) {
@@ -41,7 +41,7 @@ $di->setShared('view', function() use($di)
 			);
 			return $volt;
 		},
-	]);
+	));
 	return $view;
 });
 
@@ -79,13 +79,11 @@ $di->setShared('dispatcher', function() use($di)
 $di->setShared('viewCache', function() use($di)
 {
 	$config = $di->get('config')->cache;
-	$frontCache = new Phalcon\Cache\Frontend\Output([
+	$frontCache = new Phalcon\Cache\Frontend\Output(array(
 		'lifetime' => $config->lifetime
-	]);
-
-	$cache = new Phalcon\Cache\Backend\File($frontCache, [
+	));
+	$cache = new Phalcon\Cache\Backend\File($frontCache, array(
 		'cacheDir' => $config->dir,
-	]);
-
+	));
 	return $cache;
 });

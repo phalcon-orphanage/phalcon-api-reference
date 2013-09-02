@@ -1,7 +1,7 @@
 <?php
 
 $loader = new Phalcon\Loader;
-$loader->registerNamespaces([
+$loader->registerNamespaces(array(
 	'ApiDocs' => APP_ROOT,
-]);
+));
 $loader->register();
