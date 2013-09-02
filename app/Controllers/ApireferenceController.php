@@ -19,7 +19,7 @@ class ApiReferenceController extends Controller
 			$this->dispatcher->setParam('version', Models\Versions::maximum(array(
 				'column'     => 'version',
 				'conditions' => 'version NOT LIKE("tmp-%")'
-			));
+			)));
 		}
 
 		if(!$this->dispatcher->getParam('language'))
@@ -201,10 +201,10 @@ class ApiReferenceController extends Controller
 
 	protected function _getStructure(Models\Versions $version)
 	{
-		$tree = (object)(
+		$tree = (object)array(
 			'structure'   => array(),
 			'inheritance' => array(),
-			'list'        => array(),
+			'list'        => array()
 		);
 
 		foreach($version->classes as $class)
