@@ -68,7 +68,7 @@ class Model extends \Phalcon\Mvc\Model
 
 		foreach(array_diff($numeric, $pk) as $attr)
 		{
-			if(is_bool($this->$attr) && isset($notNullarray($attr)))
+			if(is_bool($this->$attr) && isset($notNullarray[$attr]))
 			{
 				$this->$attr = (int)$this->$attr;
 			}
