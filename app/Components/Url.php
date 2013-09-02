@@ -8,12 +8,12 @@ class Url extends \Phalcon\Mvc\Url
 	public function getApiUrl($class, $lang=null, $version=null)
 	{
 		$dispatcher = $this->getDI()->get('dispatcher');
-		return $this->get([
+		return $this->get(array(
 			'for'      => 'showClass',
 			'class'    => str_replace('\\', '/', $class),
 			'language' => $lang    ?: $dispatcher->getParam('language'),
 			'version'  => $version ?: $dispatcher->getParam('version'),
-		]);
+		));
 	}
 
 	public function getGitUrl($file, $version=null, $line=null)
