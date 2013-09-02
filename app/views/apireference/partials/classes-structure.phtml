@@ -1,4 +1,5 @@
 <?php
+
 $printList = function($ns, $selected) use(&$printList, $tree)
 {
 	$arr = array_unique(array_merge(
@@ -14,7 +15,7 @@ $printList = function($ns, $selected) use(&$printList, $tree)
 	{
 		$namespace = $tree->structure[$ns]->name.'\\'.$name;
 		$class     = $selected == $namespace ? 'cl-selected' : '';
-		echo "<li class=\"$class\">" , $this->tag->linkToApi(array($namespace, $name));
+		echo "<li class=\"$class\">" , Phalcon\Tag::linkToApi(array($namespace, $name));
 		if(isset($tree->structure[$namespace]))
 		{
 			$printList($namespace, $selected);
