@@ -6,7 +6,7 @@ namespace ApiDocs\Forms;
 class Form extends \Phalcon\Forms\Form
 {
 	protected $name;
-	protected $labels = [];
+	protected $labels = array()
 
 	public function initialize()
 	{
@@ -83,7 +83,7 @@ class Form extends \Phalcon\Forms\Form
 		if($submitLabel)
 		{
 			echo '<div class="form-actions">';
-			echo (new \Phalcon\Forms\Element\Submit($submitLabel))->render(['class'=>'btn btn-primary']);
+			echo (new \Phalcon\Forms\Element\Submit($submitLabel))->render(array('class'=>'btn btn-primary'));
 			echo '</div>';
 		}
 
