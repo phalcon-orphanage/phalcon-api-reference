@@ -16,7 +16,6 @@ trait CLI
 		return $raw ? fgets(STDIN) : rtrim(fgets(STDIN), PHP_EOL);
 	}
 
-
 	/**
 	 * Prints text to STDOUT.
 	 *
@@ -29,7 +28,6 @@ trait CLI
 		return fwrite(STDOUT, $text.($appendEOL ? PHP_EOL : ''));
 	}
 
-
 	/**
 	 * Prints text to STDERR.
 	 *
@@ -41,7 +39,6 @@ trait CLI
 	{
 		return fwrite(STDERR, $text.($appendEOL ? PHP_EOL : ''));
 	}
-
 
 	/**
 	 * Asks the user for input. Ends when the user types a PHP_EOL. Optionally
@@ -59,7 +56,6 @@ trait CLI
 		return $this->stdin();
 	}
 
-
 	/**
 	 * Prints text to STDOUT appended with a PHP_EOL.
 	 *
@@ -71,7 +67,6 @@ trait CLI
 		return $this->stdout($text, true);
 	}
 
-
 	/**
 	 * Prints text to STDERR appended with a PHP_EOL.
 	 *
@@ -82,7 +77,6 @@ trait CLI
 	{
 		return $this->stderr($text, true);
 	}
-
 
 	/**
 	 * Prompts the user for input

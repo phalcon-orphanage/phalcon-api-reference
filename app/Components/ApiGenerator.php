@@ -2,6 +2,7 @@
 
 namespace ApiDocs\Components;
 
+use Phalcon\Mvc\User\Component;
 
 /**
  * Class ApiGenerator
@@ -13,7 +14,7 @@ namespace ApiDocs\Components;
  * @property-read \stdClass[] $properties;
  * @property-read \stdClass[] $methods;
  */
-class ApiGenerator extends \Phalcon\Mvc\User\Component
+class ApiGenerator extends Component
 {
 	protected $_source;
 	protected $_name;
@@ -32,7 +33,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		$this->_source = $source;
 	}
 
-
 	/**
 	 * @param string $varName
 	 */
@@ -45,7 +45,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		}
 	}
 
-
 	/**
 	 * @param $name
 	 * @return string
@@ -55,34 +54,19 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		return str_replace('\\', '/', preg_replace('/^phalcon\\\/', '', strtolower($name))) . '.c';
 	}
 
-
 	/**
 	 * @param $sources
 	 * @return string
 	 */
 	public static function getSourceVersion($sources)
 	{
-		$started = false;
-		$version = [];
-
-		foreach(explode("\n", $sources) as $line)
-		{
-			if(!$started && false !== strpos($line, 'PHP_METHOD(Phalcon_Version, _getVersion)'))
-			{
-				$started = true;
-			}
-			elseif($started && preg_match('/add_next_index_long\(version, (\d+)\)/', $line, $matches))
-			{
-				$version[] = $matches[1];
-			}
-
-			if(count($version) == 3)
-			{
-				break;
+		foreach (explode("\n", $sources) as $line) {
+			if (false !== strpos($line, 'define PHP_PHALCON_VERSION')) {
+				preg_match('@"(.*)"@', $line, $matches);
+				return $matches[1];
 			}
 		}
-
-		return join('.', $version);
+		return null;
 	}
 
 
@@ -92,10 +76,11 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 	 */
 	public static function findClassName($source)
 	{
-		if(!preg_match('/^\s*PHALCON_INIT_CLASS\((\w+)\)/m', $source, $matches))
-		{
+
+		if (!preg_match('/^\s*PHALCON_INIT_CLASS\((\w+)\)/m', $source, $matches)) {
 			return false;
 		}
+
 		$parts     = explode('_', $matches[1]);
 		$name      = array_pop($parts);
 		$namespace = join('\\', $parts);
@@ -112,7 +97,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		$this->parseSource();
 	}
 
-
 	/**
 	 * @return $this
 	 */
@@ -127,7 +111,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		return $this;
 	}
 
-
 	/**
 	 * @param \ReflectionClass $reflectionClass
 	 * @return $this
@@ -137,9 +120,9 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		$this->_class = new \stdClass;
 		$this->_class->name         = $reflectionClass->getShortName();
 		$this->_class->namespace    = $reflectionClass->getNamespaceName();
-		$this->_class->is_abstract  = $reflectionClass->isAbstract();
-		$this->_class->is_final     = $reflectionClass->isFinal();
-		$this->_class->is_interface = $reflectionClass->isInterface();
+		$this->_class->is_abstract  = (int) $reflectionClass->isAbstract();
+		$this->_class->is_final     = (int) $reflectionClass->isFinal();
+		$this->_class->is_interface = (int) $reflectionClass->isInterface();
 		$this->_class->file         = static::getPathByClassName($this->_name);
 		$this->_class->extends      = $reflectionClass->getParentClass();
 		$this->_class->extends      = $this->_class->extends ? $this->_class->extends->getName() : null;
@@ -157,17 +140,16 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 	{
 		$this->_constants = [];
 
-		foreach($constants as $name => $value)
-		{
+		foreach ($constants as $name => $value) {
 			$const = new \stdClass;
 			$const->name  = $name;
 			$const->type  = gettype($value);
 
-			if(is_bool($value))
+			if (is_bool($value))
 				$const->value = $value ? 'true' : 'false';
-			elseif(is_numeric($value) || is_string($value))
+			elseif (is_numeric($value) || is_string($value))
 				$const->value = (string)$value;
-			elseif(is_null($value))
+			elseif (is_null($value))
 				$const->value = 'null';
 			else
 				$const->value = (string)$value;
@@ -178,7 +160,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		return $this;
 	}
 
-
 	/**
 	 * @param array $reflectionProperties
 	 * @return $this
@@ -187,23 +168,21 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 	{
 		$this->_properties = [];
 
-		foreach($reflectionProperties as $reflProperty)
-		{
+		foreach ($reflectionProperties as $reflProperty) {
 			$property = new \stdClass;
-			$property->name       = $reflProperty->getName();
-			$property->is_static  = $reflProperty->isStatic();
+			$property->name       = (string) $reflProperty->getName();
+			$property->is_static  = (int) $reflProperty->isStatic();
 			$property->defined_by = $reflProperty->getDeclaringClass()->getName();
 
-			if($reflProperty->isPrivate())       $property->visibility = 'private';
-			elseif($reflProperty->isProtected()) $property->visibility = 'protected';
-			elseif($reflProperty->isPublic())    $property->visibility = 'public';
+			if ($reflProperty->isPrivate())       $property->visibility = 'private';
+			elseif ($reflProperty->isProtected()) $property->visibility = 'protected';
+			elseif ($reflProperty->isPublic())    $property->visibility = 'public';
 
 			$this->_properties[$property->name] = $property;
 		}
 
 		return $this;
 	}
-
 
 	/**
 	 * @param array $arguments
@@ -217,7 +196,7 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		{
 			$arg = new \stdClass;
 			$arg->name        = $reflArg->getName();
-			$arg->is_optional = $reflArg->isOptional();
+			$arg->is_optional = (int) $reflArg->isOptional();
 			$arg->ordering    = $reflArg->getPosition();
 
 			// getDefaultValue() doesn't works with internal functions
@@ -227,7 +206,6 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 		}
 	}
 
-
 	/**
 	 * @param array $reflectionMethods
 	 * @return $this
@@ -236,13 +214,12 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 	{
 		$this->_methods = [];
 
-		foreach($reflectionMethods as $reflMethod)
-		{
+		foreach($reflectionMethods as $reflMethod) {
 			$method = new \stdClass;
 			$method->name        = $reflMethod->getName();
-			$method->is_static   = $reflMethod->isStatic();
-			$method->is_final    = $reflMethod->isFinal();
-			$method->is_abstract = $reflMethod->isAbstract();
+			$method->is_static   = (int) $reflMethod->isStatic();
+			$method->is_final    = (int) $reflMethod->isFinal();
+			$method->is_abstract = (int) $reflMethod->isAbstract();
 			$method->defined_by  = $reflMethod->getDeclaringClass()->getName();
 
 			if($reflMethod->isPrivate())       $method->visibility = 'private';
@@ -270,23 +247,22 @@ class ApiGenerator extends \Phalcon\Mvc\User\Component
 
 		$code = explode("\n", $this->_source);
 
-		foreach($code as $i => $line)
-		{
-			if(trim($line) == '/**')
-			{
+		foreach($code as $i => $line){
+
+			if (trim($line) == '/**') {
 				$comment       = [];
 				$openComment   = true;
 				$parseNextLine = false;
 			}
 
-			if($openComment)
-			{
+			if ($openComment) {
+
 				$comment[] = $line;
-				if(trim($line) == '*/')
-				{
+				if (trim($line) == '*/')  {
+
 					// If it was the first comment in file
-					if($classDoc === null)
-					{
+					if($classDoc === null) {
+
 						$classDoc = $this->parseComment($comment);
 						$comment  = [];
 

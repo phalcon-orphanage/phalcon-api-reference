@@ -37,7 +37,7 @@ class GenapiTask extends Task
 		$this->_currentVersion = join('.', sscanf(\Phalcon\Version::get(), '%d.%d.%d'));
 		if(!$this->dispatcher->getParam('overwrite') && $this->db->tableExists((new Models\Versions)->getSource()))
 		{
-			$hasRecords = (bool)Models\Versions::count([
+			$hasRecords = (bool) Models\Versions::count([
 				'conditions' => 'version = ?0',
 				'bind'       => [$this->_currentVersion]
 			]);
@@ -78,65 +78,62 @@ class GenapiTask extends Task
 	{
 		$this->output('Checking your Phalcon version');
 
-		if(!$sourceVersion = $this->_getSource('version.c'))
-		{
+		if (!$sourceVersion = $this->_getSource('php_phalcon.h')) {
 			die('Sources in the specified path is not found');
 		}
 
 		$sourceVersion = ApiGenerator::getSourceVersion($sourceVersion);
-		if($this->_currentVersion != $sourceVersion)
-		{
+		if ($this->_currentVersion != $sourceVersion) {
 			die("Your current Phalcon version is '$this->_currentVersion', but in the sources is '$sourceVersion'. Task stopped");
 		}
 
 		$this->output("Ok. Your current Phalcon version is '$this->_currentVersion'");
 
-		if(!$this->db->tableExists((new Models\Versions)->getSource()))
-		{
-			$this->output('DB schema doesn\'t exists. Creating.');
+		$exists = (bool) $this->db->tableExists((new Models\Versions)->getSource(), 'api');
+		if (!$exists) {
+			$this->output('DB schema doesn\'t exist. Creating.');
 			$this->_createSchema();
 		}
 
-		$tmpVers = 'tmp-'.substr(md5(microtime()), 0, 6);
+		$tmpVers = 'tmp-' . substr(md5(microtime()), 0, 6);
 
 		$version = new Models\Versions;
 		$version->version    = $tmpVers;
 		$version->changelog  = $this->_getSource('../CHANGELOG');
 
-		if(!$version->save())
-		{
+		if (!$version->save()) {
 			die(join("\n", $version->getMessages()));
 		}
 
 		$this->output('Generating API from sources');
 
-		try
-		{
+		try {
+
 			$list = (new \ReflectionExtension('phalcon'))->getClassNames();
 			array_walk($list, [$this, '_generateClass'], $tmpVers);
-		}
-		catch(\Exception $e)
-		{
-			if($this->db->isUnderTransaction())
-			{
+
+		} catch(\Exception $e) {
+
+			if ($this->db->isUnderTransaction()) {
 				$this->db->rollback();
 			}
 			$version->delete();
-			die($e->getMessage());
+
+			echo $e->getMessage(), PHP_EOL;
+			echo $e->getFile(), ':', $e->getLine(), PHP_EOL;
+			echo $e->getTraceAsString();
+			die;
 		}
 
-
-		if(($oldVersion = Models\Versions::findFirst([
+		if (($oldVersion = Models\Versions::findFirst([
 			'conditions' => 'version = ?0',
 			'bind'       => [$sourceVersion]
-		])) && !$oldVersion->delete())
-		{
+		])) && !$oldVersion->delete()) {
 			$version->delete();
 			die($oldVersion->getMessages());
 		}
 
-		if(!$this->db->update($version->getSource(), ['version'], [$sourceVersion], "version='$tmpVers'"))
-		{
+		if (!$this->db->update($version->getSource(), ['version'], [$sourceVersion], "version='$tmpVers'")) {
 			$version->delete();
 			die('Unsuccessful attempt');
 		}
@@ -144,19 +141,17 @@ class GenapiTask extends Task
 		die('Done');
 	}
 
-
-
 	/**
 	 * @return bool
 	 */
 	protected function _createSchema()
 	{
-		if(!is_file($this->config->schemaPath) || !trim($schema = file_get_contents($this->config->schemaPath)))
-		{
+		if (!is_file($this->config->schemaPath) || !trim($schema = file_get_contents($this->config->schemaPath))) {
 			die('DB schema file doesn\'t exists or is empty');
 		}
-		$schema = str_replace('{{prefix}}', $this->config->db->tblPrefix, $schema);
-		return $this->db->execute($schema);
+		echo $schema = str_replace('{{prefix}}', $this->config->db->tblPrefix, $schema);
+		$this->db->execute($schema);
+		$this->output('OK');
 	}
 
 
@@ -181,8 +176,7 @@ class GenapiTask extends Task
 	protected function _getGitSource($file, $branch)
 	{
 		static $config;
-		if($config === null)
-		{
+		if ($config === null) {
 			$config = $this->config->genapi->github;
 			$config->projectUrl = rtrim($this->dispatcher->getParam('dir', null, $config->projectUrl), '/');
 			if($user = $this->dispatcher->getParam('user'))
@@ -196,17 +190,14 @@ class GenapiTask extends Task
 
 		curl_setopt($curl, CURLOPT_URL, $url);
 
-		if(($result = curl_exec($curl)) === false)
-		{
+		if (($result = curl_exec($curl)) === false) {
 			throw new \Exception(curl_error($curl));
 		}
 
 		$data = json_decode($result);
 
-		if(is_object($data) && isset($data->type) && $data->type == 'file')
-		{
-			switch($data->encoding)
-			{
+		if (is_object($data) && isset($data->type) && $data->type == 'file') {
+			switch ($data->encoding) {
 				case 'base64':
 					return base64_decode($data->content);
 					break;
@@ -215,17 +206,12 @@ class GenapiTask extends Task
 					throw new \Exception("Unknown content encoding received from GitHub: \"$data->encoding\"");
 					break;
 			}
-		}
-		elseif(is_object($data) && $data->message)
-		{
-			if($data->message == 'Not Found')
-			{
+		} elseif (is_object($data) && $data->message) {
+			if ($data->message == 'Not Found') {
 				return false;
 			}
 			throw new \Exception("Error message from GitHub: \"$data->message\"");
-		}
-		else
-		{
+		} else {
 			throw new \Exception('Unexpected data received from GitHub');
 		}
 	}
@@ -240,14 +226,11 @@ class GenapiTask extends Task
 		$dir  = rtrim($this->dispatcher->getParam('dir', null, $this->config->genapi->filesystem->baseDir), '\/');
 		$path = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, "$dir/$file");
 
-		if(!is_file($path))
-		{
+		if (!is_file($path)) {
 			return false;
 		}
-
 		return file_get_contents($path);
 	}
-
 
 	/**
 	 * @param array $curlOptions
@@ -256,20 +239,17 @@ class GenapiTask extends Task
 	 */
 	protected function _getCurl(array $curlOptions=[], $reinit=false)
 	{
-		if($this->_curl && $reinit)
-		{
+		if ($this->_curl && $reinit) {
 			$this->_closeCurl();
 		}
 
-		if($this->_curl === null)
-		{
+		if ($this->_curl === null) {
 			$this->_curl = curl_init();
 			curl_setopt_array($this->_curl, $curlOptions);
 		}
 
 		return $this->_curl;
 	}
-
 
 	/**
 	 *
@@ -279,7 +259,6 @@ class GenapiTask extends Task
 		curl_close($this->_getCurl());
 		unset($this->_curl);
 	}
-
 
 	/**
 	 * @param string $className
@@ -294,8 +273,7 @@ class GenapiTask extends Task
 
 		$file = ApiGenerator::getPathByClassName($className);
 
-		if(($source = $this->_getSource($file)) === false)
-		{
+		if (($source = $this->_getSource($file)) === false) {
 			$this->output("Unable to get $className sources");
 		}
 
@@ -306,29 +284,25 @@ class GenapiTask extends Task
 		$properties = [];
 		$methods    = [];
 
-		foreach($api->constants as $c)
-		{
+		foreach ($api->constants as $c) {
 			$constant = new Models\Constants;
 			$constant->assign((array)$c);
 			$constants[] = $constant;
 		}
 
-		foreach($api->properties as $p)
-		{
+		foreach ($api->properties as $p)	{
 			$property = new Models\Properties;
 			$property->assign((array)$p);
 			$properties[] = $property;
 		}
 
-		foreach($api->methods as $m)
-		{
+		foreach ($api->methods as $m) {
+
 			$method = new Models\Methods;
 			$method->assign((array)$m);
 			$methods[] = $method;
 			$arguments = [];
-
-			foreach($m->arguments as $arg)
-			{
+			foreach ($m->arguments as $arg) {
 				$argument = new Models\Arguments;
 				$argument->assign((array)$arg);
 				$arguments[] = $argument;
@@ -339,6 +313,7 @@ class GenapiTask extends Task
 
 		$class = new Models\Classes;
 		$class->assign((array)$api->class);
+
 		$class->version    = $version;
 		$class->constants  = $constants;
 		$class->properties = $properties;
@@ -346,10 +321,12 @@ class GenapiTask extends Task
 		$class->implements = $class->implements ? join(',', $class->implements) : null;
 
 		$this->db->begin();
-		if(!$class->save())
-		{
-			throw new \Exception(join("\n", $class->getMessages()));
+		if (!$class->save()) {
+			foreach ($class->getMessages() as $message) {
+				throw new \Exception($message);
+			}
 		}
+
 		$this->db->commit();
 
 		return $class;

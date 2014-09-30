@@ -1,30 +1,28 @@
 <?php
 
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+
 $di = new Phalcon\DI\FactoryDefault;
 
-$di->setShared('config', function()
-{
+$di->setShared('config', function() {
 	return new Phalcon\Config(require APP_ROOT . '/config/config.php');
 });
 
-$di->setShared('router', function()
-{
+$di->setShared('router', function() {
 	return require APP_ROOT . '/config/routes.php';
 });
 
-$di->setShared('url', function()
-{
-	return new \ApiDocs\Components\Url;
+$di->setShared('url', function() use ($di) {
+	$url = new \ApiDocs\Components\Url;
+	$url->setBaseUri('/api/');
+	return $url;
 });
 
-$di->setShared('tag', function()
-{
+$di->setShared('tag', function() {
 	return new \ApiDocs\Components\Tag;
 });
 
-
-$di->setShared('view', function() use($di)
-{
+$di->setShared('view', function() use ($di) {
 	$view = new Phalcon\Mvc\View;
 	$view->setViewsDir(APP_ROOT . '/views/');
 	$view->registerEngines(array(
@@ -45,23 +43,16 @@ $di->setShared('view', function() use($di)
 	return $view;
 });
 
-
-$di->setShared('db', function() use($di)
-{
-	$connection = new Phalcon\Db\Adapter\Pdo\Mysql((array)$di->get('config')->db);
+$di->setShared('db', function() use ($di) {
+	$connection = new DbAdapter((array) $di->get('config')->db);
 	return $connection;
 });
 
-
-$di->setShared('dispatcher', function() use($di)
-{
+$di->setShared('dispatcher', function() use($di) {
 	$eventsManager = $di->get('eventsManager');
-	$eventsManager->attach('dispatch', function($event, $dispatcher, $exception) use($di)
-	{
-		if($event->getType() == 'beforeException')
-		{
-			switch($exception->getCode())
-			{
+	$eventsManager->attach('dispatch', function($event, $dispatcher, $exception) use($di) {
+		if ($event->getType() == 'beforeException') {
+			switch ($exception->getCode()) {
 				case Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
 				case Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
 					$dispatcher->forward($di->get('router')->getRouteByName('404')->getPaths());

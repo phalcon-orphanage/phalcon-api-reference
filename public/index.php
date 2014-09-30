@@ -7,8 +7,7 @@
  * @param bool $is_dump
  */
 
-function pd($str='this is print-die function', $is_dump=false)
-{
+function pd($str='this is print-die function', $is_dump = false) {
     $backTrace = debug_backtrace();
     echo "<hr/><p>{$backTrace[0]['file']} ({$backTrace[0]['line']})</p><pre>";
     $is_dump || !$str || is_bool($str) || is_numeric($str)
@@ -19,11 +18,8 @@ function pd($str='this is print-die function', $is_dump=false)
 
 error_reporting(E_ALL | E_NOTICE);
 
-
-if(!extension_loaded('phalcon'))
-{
+if (!extension_loaded('phalcon')) {
     throw new Exception("Phalcon extension is required");
 }
-
 
 require '../app/bootstrap.php';

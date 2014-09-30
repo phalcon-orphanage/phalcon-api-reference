@@ -4,7 +4,7 @@ CREATE TABLE `{{prefix}}arguments` (
 	`method_id` int(11) NOT NULL,
 	`name` varchar(255) NOT NULL,
 	`type` varchar(255) DEFAULT NULL,
-	`is_optional` tinyint(1) NOT NULL,
+	`is_optional` INTEGER NOT NULL,
 	`default_value` varchar(255) DEFAULT NULL,
 	`description` varchar(255) DEFAULT NULL,
 	`ordering` tinyint(4) NOT NULL,
@@ -20,9 +20,9 @@ CREATE TABLE `{{prefix}}classes` (
 	`version` char(10) NOT NULL,
 	`namespace` varchar(255) NOT NULL DEFAULT '',
 	`name` varchar(255) NOT NULL,
-	`is_interface` tinyint(1) NOT NULL,
-	`is_abstract` tinyint(1) NOT NULL,
-	`is_final` tinyint(1) NOT NULL,
+	`is_interface` INTEGER NOT NULL,
+	`is_abstract` INTEGER NOT NULL,
+	`is_final` INTEGER NOT NULL,
 	`file` varchar(255) NOT NULL COLLATE 'utf8_bin',
 	`docs` text,
 	`example` text,
@@ -57,9 +57,9 @@ CREATE TABLE `{{prefix}}methods` (
 	`class_id` int(11) NOT NULL,
 	`name` varchar(255) NOT NULL,
 	`visibility` enum('public','protected','private') NOT NULL,
-	`is_static` tinyint(1) NOT NULL,
-	`is_abstract` tinyint(1) NOT NULL,
-	`is_final` tinyint(1) NOT NULL,
+	`is_static` INTEGER NOT NULL,
+	`is_abstract` INTEGER NOT NULL,
+	`is_final` INTEGER NOT NULL,
 	`returns` varchar(255) DEFAULT NULL,
 	`returns_docs` varchar(255) DEFAULT NULL,
 	`docs` text,
@@ -79,7 +79,7 @@ CREATE TABLE `{{prefix}}properties` (
 	`name` varchar(255) NOT NULL,
 	`type` varchar(255) DEFAULT NULL,
 	`visibility` enum('public','protected','private') NOT NULL,
-	`is_static` tinyint(1) NOT NULL,
+	`is_static` INTEGER NOT NULL,
 	`access` enum('read','write','') NOT NULL DEFAULT '',
 	`getter` varchar(255) DEFAULT NULL,
 	`setter` varchar(255) DEFAULT NULL,
@@ -125,10 +125,6 @@ ALTER TABLE `{{prefix}}arguments`
 
 ALTER TABLE `{{prefix}}classes`
   ADD CONSTRAINT `fk_classes_versions_version` FOREIGN KEY (`version`) REFERENCES `{{prefix}}versions` (`version`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `{{prefix}}classes_inheritance`
-  ADD CONSTRAINT `fk_inheritance_classes_class_id` FOREIGN KEY (`class_id`) REFERENCES `{{prefix}}classes` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_inheritance_classes_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `{{prefix}}classes` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `{{prefix}}constants`
   ADD CONSTRAINT `fk_constants_class_id` FOREIGN KEY (`class_id`) REFERENCES `{{prefix}}classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

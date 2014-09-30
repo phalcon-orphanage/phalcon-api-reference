@@ -29,28 +29,25 @@ class Model extends \Phalcon\Mvc\Model
 
 	public function validation()
 	{
-		if(!empty($this->_validation))
-		{
-			foreach($this->_validation as $field => $rules)
-			{
-				if(is_string($rules))
-				{
+		if (!empty($this->_validation)) {
+
+			foreach ($this->_validation as $field => $rules) {
+
+				if (is_string($rules)) {
 					$rules = array($rules => array());
 				}
 
-				foreach($rules as $validator => $params)
-				{
-					if(is_numeric($validator))
-					{
+				foreach ($rules as $validator => $params) {
+					if (is_numeric($validator)) {
 						$validator = $params;
 						$params    = array();
 					}
-					if(substr($validator, 0, 3) === 'Ph\\')
-					{
+					if (substr($validator, 0, 3) === 'Ph\\') {
 						$validator = '\Phalcon\Mvc\Model\Validator' . substr($validator, 2);
 					}
+					//var_dump($field);
 					$paramsarray['field'] = $field;
-					$this->validate(new $validator($params));
+					//$this->validate(new $validator($params));
 				}
 			}
 		}

@@ -1,18 +1,19 @@
 <?php
 
+use Phalcon\Mvc\Application;
+
 define('APP_ROOT', __DIR__);
 
-try
-{
+try {
+
 	require 'loader.php';
 	require 'di.php';
 
-	$app = new Phalcon\Mvc\Application($di);
+	$app = new Application($di);
 	echo $app->handle()->getContent();
-}
-catch(Exception $e)
-{
-	echo $e->getMessage();
-	//pd($e);
+
+} catch(Exception $e) {
+	echo $e->getMessage(), PHP_EOL;
+	echo $e->getTraceAsString();
 }
 
